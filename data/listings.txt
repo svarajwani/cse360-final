@@ -1,0 +1,8 @@
+# id|seller|title|author|year|cat|cond|origPrice|sysPrice|qty
+L-001|murad|Clean Code|Robert C. Martin|2008|Computer|Used-Like-New|50.00|35.00|0
+L-002|lemuel|Discrete Mathematics and Its Applications|Kenneth Rosen|2019|Math|Heavily-Used|120.00|30.00|2
+L-003|svar|Chemistry Lab Manual|ASU Faculty|2023|Natural Science|Moderately-Used|60.00|36.00|1
+L-004|murad|Introduction to Algorithms|Cormen, Leiserson, Rivest, Stein|2009|Computer|Moderately-Used|100.00|60.00|0
+L-005|lemuel|Pride and Prejudice|Jane Austen|2021|English|Used-Like-New|15.00|10.00|3
+L-006|svar|The Art of Public Speaking|Stephen Lucas|2020|Other|Heavily-Used|70.00|18.00|1
+L-007|murad|Linear Algebra and Its Applications|David C. Lay|201

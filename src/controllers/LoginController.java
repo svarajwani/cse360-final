@@ -34,7 +34,7 @@ public class LoginController {
                 if (role.equals("admin")) {
                     root = FXMLLoader.load(getClass().getResource("/views/admin.fxml"));
                 } else {
-                    root = FXMLLoader.load(getClass().getResource("/views/home.fxml"));
+                    root = FXMLLoader.load(getClass().getResource("/views/browse.fxml"));
                 }
 
                 double width = stage.getWidth();
