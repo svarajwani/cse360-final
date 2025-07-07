@@ -11,15 +11,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.cell.CheckBoxTreeTableCell; // ✅ ADDED
-import javafx.beans.property.SimpleStringProperty;     // ✅ ADDED
+import javafx.scene.control.cell.CheckBoxTreeTableCell;
+import javafx.beans.property.SimpleStringProperty;
 import models.Book;
 
 public class BrowseController {
     @FXML private ComboBox<String> catBox;
     @FXML private TreeTableView<Book> tree;
 
-    @FXML private TreeTableColumn<Book, Boolean> colSelect; // ✅ NEW
+    @FXML private TreeTableColumn<Book, Boolean> colSelect;
     @FXML private TreeTableColumn<Book, String> colTitle;
     @FXML private TreeTableColumn<Book, String> colAuthor;
     @FXML private TreeTableColumn<Book, String> colPrice;
@@ -34,7 +34,7 @@ public class BrowseController {
         catBox.getItems().setAll("Computer", "Math", "Natural Science", "English", "Other");
         catBox.getSelectionModel().selectFirst();
 
-        // ✅ Checkbox setup
+
         if (colSelect != null) {
             colSelect.setCellValueFactory(data -> data.getValue().getValue().selectedProperty());
             colSelect.setCellFactory(CheckBoxTreeTableCell.forTreeTableColumn(colSelect));
@@ -48,7 +48,7 @@ public class BrowseController {
         colQty.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getValue().getQty())));
 
         books.addAll(
-                // your full book list here (unchanged)
+
         );
 
         catBox.setOnAction(event -> updateBookTable());
@@ -80,7 +80,7 @@ public class BrowseController {
 
     @FXML
     private void handleBuyBook() {
-        // ✅ Step 1: Original single-selection logic (preserved)
+
         TreeItem<Book> selectedItem = tree.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             Book book = selectedItem.getValue();
@@ -95,7 +95,7 @@ public class BrowseController {
             System.out.println("No book selected!");
         }
 
-        // ✅ Step 2: Checkbox-based multi-purchase logic (added, not replacing)
+
         for (Book book : books) {
             if (book.isSelected()) {
                 if (book.getQty() > 0) {

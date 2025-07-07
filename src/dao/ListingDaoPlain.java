@@ -9,7 +9,7 @@ import java.util.*;
 public class ListingDaoPlain {
     private static final Path FILE = Paths.get("data", "listings.txt");
 
-    /** return all listings in a category, qty>0, sorted by condition+title */
+
     public List<Listing> findByCategory(String cat) {
         if (!Files.exists(FILE)) return List.of();
 
@@ -31,7 +31,7 @@ public class ListingDaoPlain {
         return list;
     }
 
-    /** atomic purchase: decrement qty; return false if sold out */
+
     public synchronized boolean purchase(String listingId) {
         try {
             List<String> lines = Files.readAllLines(FILE);
