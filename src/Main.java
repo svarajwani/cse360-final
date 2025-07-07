@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+        dao.HistoryDaoPlain.ensureFiles();
         Parent root = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
         primaryStage.setTitle("SunDevil Book Login");
         primaryStage.setMaximized(true);
