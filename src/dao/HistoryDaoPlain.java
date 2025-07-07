@@ -21,9 +21,9 @@ public class HistoryDaoPlain {
     /** log both buyer-side and seller-side records */
     public void logSaleAndPayout(String buyer, Listing l) throws IOException {
         String ts   = LocalDateTime.now().toString();
-        String sale = join("S", buyer , l.title(), l.cat(), l.sysPrice(),    ts);
-        String pay  = join("P", l.seller(), l.title(), l.cat(),
-                l.sysPrice()*0.85,                               ts);
+        String sale = join("S", buyer , l.title(), l.cat(), l.sysPrice(), ts);
+        String pay  = join("P", l.seller(), l.title(), l.cat(), l.sysPrice() * 0.85, ts);
+
         append(SALES , sale);
         append(PAYOUT, pay );
     }
@@ -35,13 +35,21 @@ public class HistoryDaoPlain {
             Files.writeString(p, header + System.lineSeparator());
         }
     }
+
     private void append(Path p, String line) throws IOException {
         Files.writeString(p, line + System.lineSeparator(),
                 StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
-    private String join(String prefix, String a,String b,String c,double d,String ts) {
+
+    private String join(String prefix, String a, String b, String c, double d, String ts) {
         return String.join("|", id(prefix), a, b, c, fmt(d), ts);
     }
-    private String id(String pre) { return pre + "-" + System.currentTimeMillis(); }
-    private String fmt(double v)  { return String.format("%.2f", v); }
+
+    private String id(String pre) {
+        return pre + "-" + System.currentTimeMillis();
+    }
+
+    private String fmt(double v) {
+        return String.format("%.2f", v);
+    }
 }

@@ -11,14 +11,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.cell.CheckBoxTreeTableCell; // ✅ NEW
-import javafx.beans.property.SimpleStringProperty;       // ✅ NEW
+import javafx.scene.control.cell.CheckBoxTreeTableCell; // ✅ ADDED
+import javafx.beans.property.SimpleStringProperty;     // ✅ ADDED
 import models.Book;
 
 public class BrowseController {
     @FXML private ComboBox<String> catBox;
     @FXML private TreeTableView<Book> tree;
-    @FXML private TreeTableColumn<Book, Boolean> colSelect; // ✅ NEW: checkbox column
+
+    @FXML private TreeTableColumn<Book, Boolean> colSelect; // ✅ NEW
     @FXML private TreeTableColumn<Book, String> colTitle;
     @FXML private TreeTableColumn<Book, String> colAuthor;
     @FXML private TreeTableColumn<Book, String> colPrice;
@@ -33,9 +34,11 @@ public class BrowseController {
         catBox.getItems().setAll("Computer", "Math", "Natural Science", "English", "Other");
         catBox.getSelectionModel().selectFirst();
 
-        // ✅ Set checkbox column binding
-        colSelect.setCellValueFactory(data -> data.getValue().getValue().selectedProperty());
-        colSelect.setCellFactory(CheckBoxTreeTableCell.forTreeTableColumn(colSelect));
+        // ✅ Checkbox setup
+        if (colSelect != null) {
+            colSelect.setCellValueFactory(data -> data.getValue().getValue().selectedProperty());
+            colSelect.setCellFactory(CheckBoxTreeTableCell.forTreeTableColumn(colSelect));
+        }
 
         colTitle.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue().getTitle()));
         colAuthor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue().getAuthor()));
@@ -45,7 +48,7 @@ public class BrowseController {
         colQty.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getValue().getQty())));
 
         books.addAll(
-                // ⚠️ Keep your original full list here as it is
+                // your full book list here (unchanged)
         );
 
         catBox.setOnAction(event -> updateBookTable());
@@ -75,26 +78,34 @@ public class BrowseController {
         System.out.println("Load button clicked!");
     }
 
-    // ✅ Updated: allow buying multiple selected books via checkbox
     @FXML
     private void handleBuyBook() {
-        boolean anySelected = false;
-
-        for (Book book : books) {
-            if (book.isSelected()) {
-                anySelected = true;
-                if (book.getQty() > 0) {
-                    book.setQty(book.getQty() - 1);
-                    book.setSelected(false); // reset checkbox after buying
-                    System.out.println("Purchased: " + book.getTitle());
-                } else {
-                    System.out.println("Out of stock: " + book.getTitle());
-                }
+        // ✅ Step 1: Original single-selection logic (preserved)
+        TreeItem<Book> selectedItem = tree.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            Book book = selectedItem.getValue();
+            if (book.getQty() > 0) {
+                book.setQty(book.getQty() - 1);
+                updateBookTable();
+                System.out.println("Added to cart and purchased: " + book.getTitle());
+            } else {
+                System.out.println("Sorry, out of stock!");
             }
+        } else {
+            System.out.println("No book selected!");
         }
 
-        if (!anySelected) {
-            System.out.println("No books selected for purchase.");
+        // ✅ Step 2: Checkbox-based multi-purchase logic (added, not replacing)
+        for (Book book : books) {
+            if (book.isSelected()) {
+                if (book.getQty() > 0) {
+                    book.setQty(book.getQty() - 1);
+                    book.setSelected(false);
+                    System.out.println("Purchased via checkbox: " + book.getTitle());
+                } else {
+                    System.out.println("Out of stock (checkbox): " + book.getTitle());
+                }
+            }
         }
 
         updateBookTable();
