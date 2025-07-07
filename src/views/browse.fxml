@@ -4,12 +4,14 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="controllers.BrowseController"
-      spacing="12" style="-fx-padding: 20;">
+      spacing="12"
+      style="-fx-padding: 20;">
 
     <HBox spacing="8" alignment="CENTER_LEFT">
         <Label text="Category:"/>
         <ComboBox fx:id="catBox" prefWidth="220"/>
         <Button text="Load" onAction="#load"/>
+        <Button text="Add Book" onAction="#handleAddBook"/>
         <Pane HBox.hgrow="ALWAYS"/>
         <Button text="Logout"
                 style="-fx-background-color:#d9534f; -fx-text-fill:white;"
@@ -18,11 +20,13 @@
 
     <TreeTableView fx:id="tree" showRoot="false" prefHeight="600">
         <columns>
-            <TreeTableColumn fx:id="colTitle"  text="Title"  prefWidth="260"/>
-            <TreeTableColumn fx:id="colAuthor" text="Author" prefWidth="180"/>
-            <TreeTableColumn fx:id="colPrice"  text="Price"  prefWidth="80"/>
-            <TreeTableColumn fx:id="colQty"    text="Qty"    prefWidth="60"/>
-            <TreeTableColumn fx:id="colBuy"    text=""       prefWidth="70"/>
+            <TreeTableColumn fx:id="colTitle" text="Title" prefWidth="120"/>
+            <TreeTableColumn fx:id="colAuthor" text="Author" prefWidth="120"/>
+            <TreeTableColumn fx:id="colPrice" text="Price" prefWidth="80"/>
+            <TreeTableColumn fx:id="colCondition" text="Condition" prefWidth="100"/>
+            <TreeTableColumn fx:id="colCategory" text="Category" prefWidth="120"/>
+            <TreeTableColumn fx:id="colQty" text="Qty" prefWidth="60"/>
         </columns>
     </TreeTableView>
+
 </VBox>
