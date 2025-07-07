@@ -11,11 +11,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.cell.CheckBoxTreeTableCell; // ✅ NEW
+import javafx.beans.property.SimpleStringProperty;       // ✅ NEW
 import models.Book;
 
 public class BrowseController {
     @FXML private ComboBox<String> catBox;
     @FXML private TreeTableView<Book> tree;
+    @FXML private TreeTableColumn<Book, Boolean> colSelect; // ✅ NEW: checkbox column
     @FXML private TreeTableColumn<Book, String> colTitle;
     @FXML private TreeTableColumn<Book, String> colAuthor;
     @FXML private TreeTableColumn<Book, String> colPrice;
@@ -30,47 +33,19 @@ public class BrowseController {
         catBox.getItems().setAll("Computer", "Math", "Natural Science", "English", "Other");
         catBox.getSelectionModel().selectFirst();
 
-        colTitle.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getValue().getTitle()));
-        colAuthor.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getValue().getAuthor()));
-        colPrice.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getValue().getPrice())));
-        colCondition.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getValue().getCondition()));
-        colCategory.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getValue().getCategory()));
-        colQty.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getValue().getQty())));
+        // ✅ Set checkbox column binding
+        colSelect.setCellValueFactory(data -> data.getValue().getValue().selectedProperty());
+        colSelect.setCellFactory(CheckBoxTreeTableCell.forTreeTableColumn(colSelect));
 
+        colTitle.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue().getTitle()));
+        colAuthor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue().getAuthor()));
+        colPrice.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getValue().getPrice())));
+        colCondition.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue().getCondition()));
+        colCategory.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValue().getCategory()));
+        colQty.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getValue().getQty())));
 
         books.addAll(
-                new Book("Discrete Math", "Rosen", "Math", "Slightly Used", 95.0, 3),
-                new Book("Operating Systems", "Silberschatz", "Computer", "New", 110.0, 5),
-                new Book("Physics for Scientists", "Tipler", "Natural Science", "Very Used", 60.0, 1),
-                new Book("Pride and Prejudice", "Austen", "English", "Slightly Used", 28.0, 2),
-                new Book("Discrete Mathematics", "Kenneth Rosen", "Math", "Slightly Used", 75.0, 2),
-                new Book("Linear Algebra and Its Applications", "David C. Lay", "Math", "New", 90.0, 4),
-                new Book("Calculus Early Transcendentals", "James Stewart", "Math", "Very Used", 35.0, 1),
-                new Book("Introduction to Algorithms", "Cormen", "Computer", "New", 120.0, 5),
-                new Book("Computer Networking", "James Kurose", "Computer", "Slightly Used", 60.0, 2),
-                new Book("Operating System Concepts", "Silberschatz", "Computer", "New", 95.0, 3),
-                new Book("Artificial Intelligence: A Modern Approach", "Russell & Norvig", "Computer", "Slightly Used", 100.0, 1),
-                new Book("General Chemistry", "Darin Brown", "Natural Science", "New", 80.0, 3),
-                new Book("Biology", "Campbell", "Natural Science", "Very Used", 25.0, 1),
-                new Book("Fundamentals of Physics", "Halliday & Resnick", "Natural Science", "New", 99.0, 2),
-                new Book("Organic Chemistry", "Paula Yurkanis Bruice", "Natural Science", "Slightly Used", 50.0, 4),
-                new Book("Pride and Prejudice", "Jane Austen", "English", "Very Used", 10.0, 2),
-                new Book("To Kill a Mockingbird", "Harper Lee", "English", "Slightly Used", 15.0, 1),
-                new Book("1984", "George Orwell", "English", "New", 18.0, 3),
-                new Book("The Great Gatsby", "F. Scott Fitzgerald", "English", "New", 17.0, 2),
-                new Book("Macbeth", "William Shakespeare", "English", "Slightly Used", 9.0, 1),
-                new Book("Data Structures", "Seymour Lipschutz", "Computer", "Very Used", 22.0, 1),
-                new Book("Multivariable Calculus", "James Stewart", "Math", "New", 70.0, 2),
-                new Book("Differential Equations", "Paul Blanchard", "Math", "Slightly Used", 60.0, 1),
-                new Book("Microbiology", "Gerard J. Tortora", "Natural Science", "New", 100.0, 3),
-                new Book("Genetics: Analysis & Principles", "Robert Brooker", "Natural Science", "Slightly Used", 40.0, 1),
-                new Book("Moby Dick", "Herman Melville", "English", "Very Used", 7.0, 1),
-                new Book("Jane Eyre", "Charlotte Bronte", "English", "New", 13.0, 2),
-                new Book("Database System Concepts", "Silberschatz", "Computer", "New", 80.0, 2),
-                new Book("Computer Organization", "Carl Hamacher", "Computer", "Very Used", 20.0, 1),
-                new Book("Other Book 1", "Random Author", "Other", "Slightly Used", 11.0, 1),
-                new Book("Other Book 2", "Another Author", "Other", "New", 20.0, 2),
-                new Book("Other Book 3", "Somebody Else", "Other", "Very Used", 5.0, 1)
+                // ⚠️ Keep your original full list here as it is
         );
 
         catBox.setOnAction(event -> updateBookTable());
@@ -100,23 +75,30 @@ public class BrowseController {
         System.out.println("Load button clicked!");
     }
 
+    // ✅ Updated: allow buying multiple selected books via checkbox
     @FXML
     private void handleBuyBook() {
-        TreeItem<Book> selectedItem = tree.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            Book book = selectedItem.getValue();
-            if (book.getQty() > 0) {
-                book.setQty(book.getQty() - 1);
-                updateBookTable();
-                System.out.println("Added to cart and purchased: " + book.getTitle());
-            } else {
-                System.out.println("Sorry, out of stock!");
-            }
-        } else {
-            System.out.println("No book selected!");
-        }
-    }
+        boolean anySelected = false;
 
+        for (Book book : books) {
+            if (book.isSelected()) {
+                anySelected = true;
+                if (book.getQty() > 0) {
+                    book.setQty(book.getQty() - 1);
+                    book.setSelected(false); // reset checkbox after buying
+                    System.out.println("Purchased: " + book.getTitle());
+                } else {
+                    System.out.println("Out of stock: " + book.getTitle());
+                }
+            }
+        }
+
+        if (!anySelected) {
+            System.out.println("No books selected for purchase.");
+        }
+
+        updateBookTable();
+    }
 
     @FXML
     private void logout(javafx.event.ActionEvent event) {
